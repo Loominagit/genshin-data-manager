@@ -92,9 +92,9 @@ if __name__ == '__main__':
         pull_files()
 
     # read the file, then assign them in variables
-    base_rev = open(temp + '/base_revision', 'r').read().split(' ')
-    genshin_version = open(temp + '/ScriptVersion', 'r').read()
-    genshin_audio_language = open(temp + '/audio_lang_14', 'r').read()
+    base_rev = open('base_revision', 'r').read().split(' ')
+    genshin_version = open('ScriptVersion', 'r').read()
+    genshin_audio_language = open('audio_lang_14', 'r').read()
     genshin_version_code = base_rev[0]
     genshin_version_id = base_rev[1]
     
@@ -123,7 +123,7 @@ if __name__ == '__main__':
         'Chinese': []
     }
 
-    required_files = open(temp + '/res_versions_remote', 'r').read().split('\n')
+    required_files = open('/res_versions_remote', 'r').read().split('\n')
     required_files.pop() # remove last element
 
     for file in required_files:
