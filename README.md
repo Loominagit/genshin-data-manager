@@ -1,5 +1,5 @@
 # genshin-data-manager
-A script used to download Genshin Impact (Android version) game files. Coded in Python.
+A script used to download Genshin Impact (Android version) game files written in Python. Sorry if the code is a mess, because this is my first time using Python.
 
 ## How it works:
 The script will take some files from your phone (it's the game version, nothing spooky I swear), and then it will download the game files. It's simple as that.
