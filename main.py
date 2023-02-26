@@ -42,6 +42,28 @@ def download_file(url, filename):
         error(e)
         exit(1)
 
+def pull_files():
+    log('waiting for android device...')
+    subprocess.run(['adb', 'wait-for-device'], stdout=subprocess.DEVNULL)
+
+    log('checking for genshin folder...')
+    result = subprocess.run(['adb', 'shell', 'cd ' + genshin_data + 'files'])
+    if result.stderr:
+        error('You didn\'t run perform a data download, don\'t you?\n   Please perform a data download, then exit the game.')
+        exit(1)
+    else:
+        log('found one!\n')
+
+    log('fetching base_revision...')
+    subprocess.run(['adb', 'pull', genshin_data + 'base_revision'], stdout=subprocess.DEVNULL)
+    log('fetching audio_lang_14...')
+    subprocess.run(['adb', 'pull', genshin_data + 'audio_lang_14'], stdout=subprocess.DEVNULL)
+    log('fetching res_versions_remote...')
+    subprocess.run(['adb', 'pull', genshin_data + 'res_versions_remote'], stdout=subprocess.DEVNULL)
+    log('fetching ScriptVersion...')
+    subprocess.run(['adb', 'pull', genshin_data + 'ScriptVersion'], stdout=subprocess.DEVNULL)
+
+        
 if __name__ == '__main__':
 
     # brief text
@@ -56,28 +78,18 @@ if __name__ == '__main__':
     #######
 
     print('')
-    log('Files used to check game version are found.')
-    response = new_input('Do you want to use them instead? [y/n]: ')
-    
-    log('waiting for android device...')
-    subprocess.run(['adb', 'wait-for-device'], stdout=subprocess.DEVNULL)
-
-    log('checking for genshin folder...')
-    result = subprocess.run(['adb', 'shell', 'cd ' + genshin_data + 'files'])
-    if result.stderr:
-        error('You didn\'t run perform a data download, don\'t you?\n   Please perform a data download, then exit the game.')
-        exit(1)
+    if path.exists('base_revision') and path.exists('audio_lang_14') and path.exists('res_versions_remote') and path.exists('ScriptVersion'):
+        log('Files used to check game version are found.')
+        response = new_input('Do you want to use them instead? [y/n]: ')
+        if response.lower() == 'n': 
+            pull_files()
+        elif response.lower() == 'y':
+            pass
+        else:
+            error('Please input a valid response.')
+            exit(1)
     else:
-        log('found one!\n')
-
-    log('fetching base_revision...')
-    subprocess.run(['adb', 'pull', genshin_data + 'base_revision', temp], stdout=subprocess.DEVNULL)
-    log('fetching audio_lang_14...')
-    subprocess.run(['adb', 'pull', genshin_data + 'audio_lang_14', temp], stdout=subprocess.DEVNULL)
-    log('fetching res_versions_remote...')
-    subprocess.run(['adb', 'pull', genshin_data + 'res_versions_remote', temp], stdout=subprocess.DEVNULL)
-    log('fetching ScriptVersion...')
-    subprocess.run(['adb', 'pull', genshin_data + 'ScriptVersion', temp], stdout=subprocess.DEVNULL)
+        pull_files()
 
     # read the file, then assign them in variables
     base_rev = open(temp + '/base_revision', 'r').read().split(' ')
